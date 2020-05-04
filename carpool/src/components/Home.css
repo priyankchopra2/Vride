@@ -1,0 +1,18 @@
+.background-video {
+  /* height: 100%; */
+  width: 100%;
+  left: 0;
+  top: 0;
+  padding: none;
+  position: absolute;
+  opacity: 80%;
+
+  /* optional depending on what you want to do in your app */
+}
+
+.content {
+  padding: 100px;
+  position: relative;
+  color: whitesmoke;
+  text-align: center;
+}
