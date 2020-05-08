@@ -75,7 +75,7 @@ class Car extends Component {
                   </ul>
                 </div>
                 <div className="col">
-                  <h2>Add New Locations</h2>
+                  <h2>Add New Cars</h2>
                   <form onSubmit={(e) => this.submitForm(e, emp.employee)}>
                     <div class="form-group ">
                       <label for="exampleInputEmail1">Car Brand</label>

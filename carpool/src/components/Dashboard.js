@@ -6,7 +6,7 @@ import { EmpInfoContext } from "../context/EmpInfoContext";
 class Dashboard extends Component {
   static contextType = EmpInfoContext;
   render() {
-    const { isLogin, handleLogout, username } = this.context;
+    const { isLogin, handleLogout, username, empId } = this.context;
 
     if (!isLogin) {
       return <Redirect to="/login" />;
@@ -38,6 +38,9 @@ class Dashboard extends Component {
           </Link>
           <Link to="/car" className="col">
             Check Car Details
+          </Link>
+          <Link to="/checkpoolings" name={empId} className="col">
+            Check All poolings
           </Link>
         </div>
         <hr />

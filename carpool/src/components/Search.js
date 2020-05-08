@@ -1,89 +1,139 @@
-import React from "react";
+import React, { Component } from "react";
 import "./Search.css";
-import PlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from "react-places-autocomplete";
+import { LocationContext } from "../context/LocationContext";
+import { PoolContext } from "../context/PoolContext";
+import { EmpInfoContext } from "../context/EmpInfoContext";
+import { Link } from "react-router-dom";
 
 class Search extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { address: "" };
-  }
-
-  handleChange = (address) => {
-    this.setState({ address });
-    console.log(address);
+  static contextType = LocationContext;
+  state = { branchId: "" };
+  onChange = (e) => {
+    this.setState({
+      [e.target.name]: [e.target.value],
+    });
   };
 
-  handleSelect = (address) => {
-    this.setState({ address });
-    // geocodeByAddress(address)
-    //   .then((results) => getLatLng(results[0]))
-    //   .then((latLng) => console.log("Success", latLng))
-    //   .catch((error) => console.error("Error aaya h bhai", error));
+  submitForm = (e) => {
+    e.preventDefault();
   };
 
   render() {
+    const { handleLoadDestination, destination } = this.context;
     return (
-      <div className="search container">
-        <form action="" method="get">
-          <PlacesAutocomplete
-            value={this.state.address}
-            onChange={this.handleChange}
-            onSelect={this.handleSelect}
-          >
-            {({
-              getInputProps,
-              suggestions,
-              getSuggestionItemProps,
-              loading,
-            }) => (
-              <div>
-                <input
-                  {...getInputProps({
-                    name: "destination",
-                    placeholder:
-                      "Enter Destination or Area where you want to go...",
-                    className: "form-control location-search-input",
-                  })}
-                />
-                <div className="autocomplete-dropdown-container">
-                  {loading && <div>Loading...</div>}
-                  {suggestions.map((suggestion) => {
-                    const className = suggestion.active
-                      ? "suggestion-item--active"
-                      : "suggestion-item";
-                    // inline style for demonstration purpose
-                    const style = suggestion.active
-                      ? { backgroundColor: "#fafafa", cursor: "pointer" }
-                      : { backgroundColor: "#ffffff", cursor: "pointer" };
-                    return (
-                      <div
-                        {...getSuggestionItemProps(suggestion, {
-                          className,
-                          style,
-                        })}
+      <EmpInfoContext.Consumer>
+        {(emp) => {
+          return (
+            <PoolContext.Consumer>
+              {(pool) => {
+                const { handleSearchByDestination, pooling } = pool;
+                const { isLogin } = emp;
+
+                return (
+                  <div className="container">
+                    <h1>Search</h1>
+                    <div class="dropdown ">
+                      Select Destination
+                      <select
+                        class="btn border dropdown-toggle m-2"
+                        type="button"
+                        onFocus={() => handleLoadDestination()}
+                        onChange={this.onChange}
+                        // value={this.state.destination}
+                        name="branchId"
                       >
-                        <option onSelect={this.handleChange}>
-                          {suggestion.description}
-                        </option>
+                        <option>Select Location</option>
+
+                        {destination.length ? (
+                          destination.map((i) => (
+                            <option
+                              className="list-group-item"
+                              key={i.branchId}
+                              value={i.branchId}
+                            >
+                              {i.branchName}
+                            </option>
+                          ))
+                        ) : (
+                          <option className="list-group-item">
+                            No Destination Saved
+                          </option>
+                        )}
+                      </select>
+                    </div>
+                    <button
+                      className="btn btn-info"
+                      onClick={() =>
+                        handleSearchByDestination(this.state.branchId)
+                      }
+                    >
+                      Search
+                    </button>
+
+                    <div className="row">
+                      <div className="col">
+                        <ul className="list-group">
+                          {/* {empId} */}
+                          {pooling.length ? (
+                            pooling.map((i) => (
+                              <li
+                                className="list-group-item p-4"
+                                key={i.poolingId}
+                              >
+                                <div className="row">
+                                  <div className="col-4">
+                                    <b>Start Location:</b>{" "}
+                                    {i.startLocation.locationName}
+                                    <br />
+                                    <b>Start Date:</b> {i.startDate}
+                                    <br />
+                                    <b>Start Time:</b> {i.startTime}
+                                    <br />
+                                    <b>CostPerHead:</b> {i.costPerHead}
+                                    <br />
+                                  </div>
+                                  <div className="col">
+                                    <b>Destination Location:</b>{" "}
+                                    {i.destinationLocation.branchName}
+                                    <br />
+                                    <b>Car:</b> {i.car.carBrand} ,{" "}
+                                    {i.car.carModel}
+                                    <br />
+                                    <b>Available Seats:</b> {i.availableSeats}
+                                    <br />
+                                    {isLogin ? (
+                                      <button
+                                        className="btn btn-danger float-right"
+                                        // onClick={() => handleAddRider(emp, i)}
+                                      >
+                                        Book CarPool
+                                      </button>
+                                    ) : (
+                                      <Link to="/login">
+                                        <button className="btn btn-info float-right">
+                                          Book CarPool
+                                        </button>
+                                      </Link>
+                                    )}
+                                  </div>
+                                </div>
+                              </li>
+                            ))
+                          ) : (
+                            <li className="list-group-item">
+                              No Pooling in this Destination
+                            </li>
+                          )}
+                        </ul>
                       </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </PlacesAutocomplete>
-          <div className="col-md-1">
-            <input
-              type="submit"
-              className="btn btn-info "
-              value="Search carpools"
-            />
-          </div>
-        </form>
-      </div>
+                    </div>
+                  </div>
+                );
+              }}
+            </PoolContext.Consumer>
+          );
+        }}
+      </EmpInfoContext.Consumer>
     );
   }
 }

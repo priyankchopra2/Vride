@@ -6,12 +6,27 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import * as serviceWorker from "./serviceWorker";
 import "bootstrap/dist/css/bootstrap.min.css";
+import SignUpContextProvider from "./context/SignUpContext";
+import PoolContextProvider from "./context/PoolContext";
+import EmpInfoContextProvider from "./context/EmpInfoContext";
+import LocationContextProvider from "./context/LocationContext";
+import CarContextProvider from "./context/CarContext";
 
 ReactDOM.render(
   <React.StrictMode>
     <div>
       {/* <Navbar /> */}
-      <App />
+      <EmpInfoContextProvider>
+        <LocationContextProvider>
+          <CarContextProvider>
+            <SignUpContextProvider>
+              <PoolContextProvider>
+                <App />
+              </PoolContextProvider>
+            </SignUpContextProvider>
+          </CarContextProvider>
+        </LocationContextProvider>
+      </EmpInfoContextProvider>
       {/* <Footer /> */}
     </div>
   </React.StrictMode>,

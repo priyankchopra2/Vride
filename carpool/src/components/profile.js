@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { EmpInfoContext } from "../context/EmpInfoContext";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 class Profile extends Component {
   state = {};
@@ -8,7 +8,10 @@ class Profile extends Component {
   static contextType = EmpInfoContext;
 
   render() {
-    const { employee } = this.context;
+    const { employee, handleDelete, isLogin } = this.context;
+    if (!isLogin) {
+      return <Redirect to="/login"></Redirect>;
+    }
     return (
       <div className="container ">
         <h1>Profile</h1>
@@ -80,6 +83,14 @@ class Profile extends Component {
             <Link to="/car">
               <button className="btn btn-info">Add/Remove Car Details</button>
             </Link>
+          </div>
+          <div className="col">
+            <button
+              className="btn btn-danger"
+              onClick={() => handleDelete(employee.empId)}
+            >
+              Delete User
+            </button>
           </div>
         </div>
       </div>

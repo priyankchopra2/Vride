@@ -41,6 +41,28 @@ class EmpInfoContextProvider extends Component {
     });
   };
 
+  handleDelete = (empid) => {
+    //it is sending error will check it later
+    let url = "api/user/delete/" + empid;
+    console.log("DELETE User from EmpInfo  context ", empid);
+    fetch(url, {
+      method: "delete",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response)
+      .then((data) => {
+        console.log("Success:", data);
+        if (data.status != 404) {
+          this.setState({ isLogin: false });
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
   render() {
     return (
       <EmpInfoContext.Provider
@@ -48,6 +70,7 @@ class EmpInfoContextProvider extends Component {
           ...this.state,
           handleLogin: this.handleLogin,
           handleLogout: this.handleLogout,
+          handleDelete: this.handleDelete,
         }}
       >
         {this.props.children}
