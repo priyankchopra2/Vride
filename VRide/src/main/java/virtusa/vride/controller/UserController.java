@@ -1,6 +1,5 @@
 package virtusa.vride.controller;
 
-import java.io.Console;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
@@ -12,7 +11,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,14 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import virtusa.vride.model.Car;
-import virtusa.vride.model.Employee;
 import virtusa.vride.model.Location;
 import virtusa.vride.model.User;
 import virtusa.vride.repository.CarRepository;
 import virtusa.vride.repository.EmployeeRepository;
 import virtusa.vride.repository.LocationRepository;
 import virtusa.vride.repository.UserRepository;
-import virtusa.vride.services.NotificationService;
 import virtusa.vride.services.OtpService;
 
 @RestController
@@ -52,9 +48,6 @@ public class UserController {
 	@Autowired
 	private OtpService otpService;
 	
-	@Autowired
-	private NotificationService notificationService;
-	
 	@PostMapping("/user/signup/getOtp/{empid}")
 	ResponseEntity<?> getOtp(@PathVariable String empid) throws URISyntaxException{
 		HashMap<String,Object> response= new HashMap<>(); 
@@ -66,13 +59,6 @@ public class UserController {
 	  			}
 	  			response.put("email", employeeRepository.findByEmpId(empid).getEmpEmail());
 		        response.put(empid, otp);
-		       try {
-		    	   notificationService.sendNotification(employeeRepository.findByEmpId(empid),otp);
-			} catch (MailException e) {
-				// TODO: handle exception
-				System.out.println("Error Sending mail");
-			}
-		        
 		        return ResponseEntity.ok().body(response);
 			} else {
 			    return new ResponseEntity<>(HttpStatus.FOUND);	
@@ -96,7 +82,7 @@ public class UserController {
 		}
 	}
 	
-	@PostMapping("/user/signup/")
+	@PostMapping("/user/signup")
 	ResponseEntity<?> createUser(@RequestBody HashMap<String,String> request) throws URISyntaxException{
 		if(employeeRepository.findById(request.get("id")).isPresent()) {
 			if(!userRepository.findByEmployee(employeeRepository.findByEmpId(request.get("id"))).isPresent()) {
@@ -112,17 +98,6 @@ public class UserController {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
-	@DeleteMapping("/user/delete/{empid}")
-	ResponseEntity<?> userDelete(@PathVariable String empid) {
-		if(userRepository.findByEmployee(employeeRepository.findByEmpId(empid)).isPresent()) {
-			Optional<User> user =userRepository.findByEmployee(employeeRepository.findByEmpId(empid));
-			userRepository.deleteById(user.get().getUserId());
-			return new ResponseEntity<>(HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-	}
-	
 	@GetMapping("/user/login/{empid}/{pass}")
 	ResponseEntity<?> userLogin(@PathVariable String empid,@PathVariable String pass) throws URISyntaxException {
 	    Optional<User> user = userRepository.findByEmployee(employeeRepository.findByEmpId(empid));
@@ -135,13 +110,23 @@ public class UserController {
 		}
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
+
+	@DeleteMapping("/user/delete/{empid}")
+	ResponseEntity<?> userDelete(@PathVariable String empid) {
+		if(userRepository.findByEmployee(employeeRepository.findByEmpId(empid)).isPresent()) {
+			Optional<User> user =userRepository.findByEmployee(employeeRepository.findByEmpId(empid));
+			userRepository.deleteById(user.get().getUserId());
+			return new ResponseEntity<>(HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
 	
 	@GetMapping("/employee/{id}")
 	ResponseEntity<?> getEmployee(@PathVariable String id){
 	    return employeeRepository.findById(id).map(response -> 
 	    ResponseEntity.ok().body(response)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
-
 	
 	@PostMapping("/add/location")
 	ResponseEntity<Location> addCar(@Valid @RequestBody Location location) throws URISyntaxException {
@@ -160,7 +145,7 @@ public class UserController {
 	    return 	locationRepository.findByEmployee(employeeRepository.findByEmpId(empid));
 	}
 	
-	@DeleteMapping("/location/delete/{empid}/{id}")
+	@DeleteMapping("{empid}/locations/{id}")
 	Collection<Location> deleteLocations(@PathVariable String empid,@PathVariable Long id){
 		locationRepository.deleteById(id);
 	    return 	locationRepository.findByEmployee(employeeRepository.findByEmpId(empid));

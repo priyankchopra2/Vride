@@ -2,11 +2,16 @@ package virtusa.vride.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
+import java.time.temporal.ChronoField;
 import java.util.Collection;
+import java.util.Date;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,18 +22,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import virtusa.vride.model.Location;
 import virtusa.vride.model.Pooling;
 import virtusa.vride.model.Rider;
-import virtusa.vride.model.Rider2;
 import virtusa.vride.model.VirtusaBranch;
 import virtusa.vride.repository.EmployeeRepository;
 import virtusa.vride.repository.PoolingRepository;
-import virtusa.vride.repository.Rider2Repository;
 import virtusa.vride.repository.RiderRepository;
 import virtusa.vride.repository.VirtusaBranchRepository;
-import java.util.Optional;
-import org.springframework.http.HttpStatus;
+
 @RestController
 @RequestMapping("/api")
 public class PoolingController {
@@ -42,9 +43,6 @@ public class PoolingController {
     @Autowired
     private RiderRepository riderRepository;
     
-    @Autowired
-    private Rider2Repository Rider2Repository;
-    
 	@Autowired
 	private EmployeeRepository employeeRepository;
 	
@@ -55,7 +53,7 @@ public class PoolingController {
 	}
 	
     @PostMapping("/add/pooling")
-    public ResponseEntity<Pooling> createPooling(@Valid @RequestBody Pooling pooling) throws URISyntaxException{
+    public ResponseEntity<?> createPooling(@Valid @RequestBody Pooling pooling) throws URISyntaxException{
         Pooling result = poolingRepository.save(pooling);
         return ResponseEntity.created(new URI("/api/pooling" + result.getPoolingId())).body(result); 
     }
@@ -65,11 +63,10 @@ public class PoolingController {
     	return poolingRepository.findByDestinationLocation(virtusaBranchRepository.findByBranchId(id));
     }
     
-    @GetMapping("/poolings/{empid}")
+    @GetMapping("/poolings/provider/{empid}")
     public Collection<Pooling> getUserPoolings(@PathVariable String empid){
     	return poolingRepository.findByEmployee(employeeRepository.findByEmpId(empid));
     }
-    
     
     @GetMapping("pooling/{id}")
     public ResponseEntity<?> getPooling(@PathVariable Long id){
@@ -80,7 +77,7 @@ public class PoolingController {
     		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     	}
     }
-    
+
     @PutMapping("/update/pooling/")
     public ResponseEntity<Pooling> updatePooling(@Valid @RequestBody Pooling pooling){
     	Pooling result = poolingRepository.save(pooling);
@@ -93,44 +90,29 @@ public class PoolingController {
     	return ResponseEntity.ok().build();
     }
     
-//    @PostMapping("/add/ride")
-//    public ResponseEntity<Pooling> createRider(@Valid @RequestBody Pooling pooling) throws URISyntaxException{
-//        Pooling result = poolingRepository.save(pooling);
-//        return ResponseEntity.created(new URI("/api/pooling" + result.getPoolingId())).body(result); 
-//    }
-    
-//    @GetMapping("/rider/{id}")
-//    public Collection<Rider> getRiders(@PathVariable Long id){
-//    	return riderRepository.findByPooling(poolingRepository.findByPoolingId(id));
-//    }
-    
-//    @PutMapping("/update/ride/")
-//    public ResponseEntity<Rider> updateRider(@Valid @RequestBody Rider rider){
-//    	Rider result = riderRepository.save(rider);
-//    	return ResponseEntity.ok().body(result);
-//    }
-    
-//    @DeleteMapping("/delete/rider/{id}")
-//    public ResponseEntity<?> deleteRider(@PathVariable Long id){
-//    	riderRepository.deleteById(id);
-//    	return ResponseEntity.ok().build();
-//    }
-    
     @PostMapping("/add/rider")
-	ResponseEntity<Rider2> createRider(@Valid @RequestBody Rider2 rider2) throws URISyntaxException {
-		Rider2 result = Rider2Repository.save(rider2);
-		return ResponseEntity.created(new URI("/api/rider/"+result.getRiderId())).body(result);
-	}
+    public ResponseEntity<Rider> createRider(@Valid @RequestBody Rider rider) throws URISyntaxException{
+        Rider result = riderRepository.save(rider);
+        Pooling pooling = result.getPooling();
+        pooling.riderBooked();
+        poolingRepository.save(pooling);
+        return ResponseEntity.created(new URI("/api/rider" + result.getRiderId())).body(result); 
+    }
     
     @GetMapping("/rider/{id}")
-    public Collection<Rider2> getRiders(@PathVariable Long id){
-    	
-    	return Rider2Repository.findByPooling(poolingRepository.findByPoolingId(id));
+    public Collection<Rider> getRiders(@PathVariable Long id){
+    	return riderRepository.findByPooling(poolingRepository.findByPoolingId(id));
+    }
+    
+    @PutMapping("/update/rider/")
+    public ResponseEntity<Rider> updateRider(@Valid @RequestBody Rider rider){
+    	Rider result = riderRepository.save(rider);
+    	return ResponseEntity.ok().body(result);
     }
     
     @DeleteMapping("/delete/rider/{id}")
     public ResponseEntity<?> deleteRider(@PathVariable Long id){
-    	Rider2Repository.deleteById(id);
+    	riderRepository.deleteById(id);
     	return ResponseEntity.ok().build();
     }
 }

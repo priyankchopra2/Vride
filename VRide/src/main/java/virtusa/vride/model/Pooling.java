@@ -1,6 +1,6 @@
 package virtusa.vride.model;
 
-import java.sql.Time;
+import java.time.Instant;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -22,11 +22,13 @@ public class Pooling {
 	@ManyToOne
 	private Location startLocation;
 	
-	@Temporal(TemporalType.DATE)
-	private Date startDate;
+	@NotNull
+	private Instant startTime;
 	
+	@NotNull
+	private Boolean withReturn;
 	
-	private Time startTime;
+	private Instant returnTime;
 	
 	@NotNull
 	private Float costPerHead;
@@ -42,78 +44,88 @@ public class Pooling {
 	
 	@NotNull
 	private Integer availableSeats;
-
-	public Long getPoolingId() {
-		return poolingId;
-	}
-
+	
 	public void setPoolingId(Long poolingId) {
 		this.poolingId = poolingId;
 	}
-
-	public Location getStartLocation() {
-		return startLocation;
-	}
-
-	public void setStartLocation(Location startLocation) {
-		this.startLocation = startLocation;
-	}
-
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	public Time getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(Time startTime) {
-		this.startTime = startTime;
-	}
-
-	public Float getCostPerHead() {
-		return costPerHead;
-	}
-
+	
 	public void setCostPerHead(Float costPerHead) {
 		this.costPerHead = costPerHead;
 	}
-
-	public VirtusaBranch getDestinationLocation() {
-		return destinationLocation;
+	
+	public void setStartLocation(Location startLocation) {
+		this.startLocation = startLocation;
 	}
-
-	public void setDestinationLocation(VirtusaBranch destinationLocation) {
+	
+	public void setStartTime(Instant startTime) {
+		this.startTime = startTime;
+	}
+	
+	public void setWithReturn(Boolean withReturn) {
+		this.withReturn = withReturn;
+	}
+	
+	public void setReturnTime(Instant returnTime) {
+		this.returnTime = returnTime;
+	}
+	
+	public void setDestinationLoction(VirtusaBranch destinationLocation) {
 		this.destinationLocation = destinationLocation;
 	}
-
-	public Employee getEmployee() {
-		return employee;
-	}
-
+	
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
 	}
-
-	public Car getCar() {
-		return car;
-	}
-
+	
 	public void setCar(Car car) {
 		this.car = car;
 	}
-
-	public Integer getAvailableSeats() {
-		return availableSeats;
-	}
-
+	
 	public void setAvailableSeats(Integer availableSeats) {
 		this.availableSeats = availableSeats;
 	}
 	
+	public Long getPoolingId() {
+		return poolingId;
+	}
 	
+	public Float getCostPerHead() {
+		return costPerHead;
+	}
+	
+	public Location getStartLocation() {
+		return startLocation;
+	}
+	
+	public Instant getStartTime() {
+		return startTime;
+	}
+	
+	public Boolean getWithReturn() {
+		return withReturn;
+	}
+	
+	public Instant getReturnTime() {
+		return returnTime;
+	}
+	
+	public VirtusaBranch getDestinationLocation() {
+		return destinationLocation;
+	}
+	
+	public Employee getEmployee() {
+		return employee;
+	}
+	
+	public Car getCar() {
+		return car;
+	}
+	
+	public Integer getAvailableSeats() {
+		return availableSeats;
+	}
+
+	public void riderBooked() {
+		availableSeats--;
+	}
 }
