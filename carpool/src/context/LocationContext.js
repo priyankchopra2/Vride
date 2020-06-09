@@ -44,7 +44,7 @@ class LocationContextProvider extends Component {
   };
 
   handleDelete = (empid, locationid) => {
-    let url = "api/location/delete/" + empid + "/" + locationid;
+    let url = "api/locations/" + empid + "/" + locationid;
     console.log("DELETE from Location context ", empid, locationid);
     fetch(url, {
       method: "delete",

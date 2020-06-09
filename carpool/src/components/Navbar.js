@@ -12,44 +12,42 @@ class Navbar extends Component {
 
     login = (
       <li className="nav-item">
-        <Link to="/login" className="nav-link">
+        <a href="/login" className="nav-link">
           Login
-        </Link>
+        </a>
       </li>
     );
 
-    if (isLogin) {
-      logout = (
-        <li className="nav-item dropdown ">
-          <Link
-            class="nav-link dropdown-toggle"
-            to="/"
-            id="navbarDropdown"
-            role="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            {username}
+    logout = (
+      <li className="nav-item dropdown ">
+        <Link
+          class="nav-link dropdown-toggle"
+          to="/"
+          id="navbarDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          {username}
+        </Link>
+        <div
+          class="dropdown-menu dropdown-menu-right"
+          aria-labelledby="navbarDropdown"
+        >
+          <Link class="dropdown-item" to="/" onClick={handleLogout}>
+            Logout
           </Link>
-          <div
-            class="dropdown-menu dropdown-menu-right"
-            aria-labelledby="navbarDropdown"
-          >
-            <Link class="dropdown-item" to="/" onClick={handleLogout}>
-              Logout
-            </Link>
-            <Link class="dropdown-item" to="/dashboard">
-              Dashboard
-            </Link>
-            <div class="dropdown-divider"></div>
-            <Link class="dropdown-item" href="#">
-              Something else here
-            </Link>
-          </div>
-        </li>
-      );
-    }
+          <Link class="dropdown-item" to="/dashboard">
+            Dashboard
+          </Link>
+          <div class="dropdown-divider"></div>
+          <Link class="dropdown-item" href="#">
+            Something else here
+          </Link>
+        </div>
+      </li>
+    );
 
     return (
       <div>

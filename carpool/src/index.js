@@ -11,6 +11,7 @@ import PoolContextProvider from "./context/PoolContext";
 import EmpInfoContextProvider from "./context/EmpInfoContext";
 import LocationContextProvider from "./context/LocationContext";
 import CarContextProvider from "./context/CarContext";
+import RiderContextProvider from "./context/RiderContext";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -21,7 +22,9 @@ ReactDOM.render(
           <CarContextProvider>
             <SignUpContextProvider>
               <PoolContextProvider>
-                <App />
+                <RiderContextProvider>
+                  <App />
+                </RiderContextProvider>
               </PoolContextProvider>
             </SignUpContextProvider>
           </CarContextProvider>

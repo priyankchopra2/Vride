@@ -8,14 +8,18 @@ import Login from "./Login";
 import Logout from "./Logout";
 import Dashboard from "./Dashboard";
 import Register from "./Register";
-import Carpool from "./Carpool";
-import PoolStatus from "./PoolStatus";
+import CreateCarpool from "./pooling/CreateCarpool";
+import PoolStatus from "./pooling/PoolStatus";
 import Location from "./Location";
 import Car from "./Car";
 import Profile from "./profile";
-import CheckPoolings from "./CheckPoolings";
-import EditPooling from "./EditPooling";
+import CheckPoolings from "./pooling/CheckPoolings";
+import EditPooling from "./pooling/EditPooling";
 import SearchWithMap from "./SearchWithMap";
+import Carpool from "./pooling/Carpool";
+import Rider from "./rider/Rider";
+import CheckRiderPoolings from "./rider/CheckRiderPoolings";
+import CheckRiders from "./pooling/CheckRiders";
 
 class App extends Component {
   state = {};
@@ -42,6 +46,12 @@ class App extends Component {
           <Route path="/register" exact={true}>
             <Register />
           </Route>
+          <Route path="/CreateCarpool" exact={true}>
+            <CreateCarpool />
+          </Route>
+          <Route path="/checkcarpoolings" exact={true}>
+            <CheckPoolings />
+          </Route>
           <Route path="/carpool" exact={true}>
             <Carpool />
           </Route>
@@ -67,6 +77,20 @@ class App extends Component {
 
           <Route path="/search2" exact={true}>
             <SearchWithMap />
+          </Route>
+
+          <Route path="/rider" exact={true}>
+            <Rider />
+          </Route>
+
+          <Route path="/checkriderpoolings" exact={true}>
+            {/* Checking Pooling details of rider from rider a/c*/}
+            <CheckRiderPoolings />
+          </Route>
+
+          <Route path="/checkRiders" exact={true}>
+            {/* Checking riders from provider poolings ...who all are riders */}
+            <CheckRiders />
           </Route>
 
           {/* <Route path="/Search2" exact={true} Component={Search2}>

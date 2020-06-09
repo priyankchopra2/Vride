@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
-import { PoolContext } from "../context/PoolContext";
-import { EmpInfoContext } from "../context/EmpInfoContext";
-import { LocationContext } from "../context/LocationContext";
-import { CarContext } from "../context/CarContext";
+import { PoolContext } from "../../context/PoolContext";
+import { EmpInfoContext } from "../../context/EmpInfoContext";
+import { LocationContext } from "../../context/LocationContext";
+import { CarContext } from "../../context/CarContext";
 // import { PoolContext } from "../context/PoolContext";
 
 class EditPooling extends Component {
@@ -11,18 +11,19 @@ class EditPooling extends Component {
 
   state = {
     poolingId: "",
-    startDate: "",
-    startTime: "",
+    startDateTime: "",
+    check: false,
+    returnDateTime: "",
     costPerHead: 0.0,
     availableSeats: 0,
     startLocation: [],
-    destinationLocation: [],
+    destination: [],
     car: [],
   };
 
   onChange = (e) => {
     if (
-      e.target.name == "destinationLocation" ||
+      e.target.name == "destination" ||
       e.target.name == "startLocation" ||
       e.target.name == "car"
     ) {
@@ -36,17 +37,24 @@ class EditPooling extends Component {
     }
   };
 
+  handleCheck = (e) => {
+    this.setState({
+      [e.target.name]: e.target.checked ? true : false,
+    });
+  };
+
   submitForm = (e) => {
     const { handleEditCarPool } = this.context;
     e.preventDefault();
     const {
       poolingId,
-      startDate,
-      startTime,
+      check,
+      returnDateTime,
+      startDateTime,
       costPerHead,
       availableSeats,
       startLocation,
-      destinationLocation,
+      destination,
       car,
     } = this.state;
 
@@ -55,14 +63,20 @@ class EditPooling extends Component {
     handleEditCarPool(
       poolingId,
       startLocation,
-      startDate,
-      startTime,
+      startDateTime,
+      check,
+      returnDateTime,
       costPerHead,
-      destinationLocation,
+      destination,
       employee,
       car,
       availableSeats
     );
+  };
+  handleDate = (date) => {
+    var nowDate = new Date(date);
+    console.log(nowDate);
+    return nowDate;
   };
   render() {
     const { editPooling, isEdit, isUpdated } = this.context;
@@ -156,7 +170,7 @@ class EditPooling extends Component {
                                     defaultValue={
                                       editPooling.destinationLocation
                                     }
-                                    name="destinationLocation"
+                                    name="destination"
                                   >
                                     <option>Select Location</option>
 
@@ -179,34 +193,61 @@ class EditPooling extends Component {
                                   </select>
                                 </div>
 
-                                <div class="form-group col-3">
-                                  <label for="exampleInputEmail1">
-                                    Carpool Start Date
-                                  </label>
+                                <div class=" form-group col">
+                                  Start Date and time
                                   <input
-                                    type="date"
                                     class="form-control"
-                                    placeholder="Starting Point / Your location"
-                                    name="startDate"
+                                    name="startDateTime"
+                                    type="datetime-local"
                                     onChange={this.onChange}
-                                    defaultValue={editPooling.startDate}
+                                    Value={editPooling.startTime}
                                   />
                                 </div>
                               </div>
-                              <div className="row">
-                                <div class="form-group col-3">
-                                  <label for="exampleInputEmail1">
-                                    Carpool Start Time
-                                  </label>
+                              <div className="row mt-4">
+                                <div className="col-4 ml-4 form-check">
                                   <input
-                                    type="time"
-                                    class="form-control"
-                                    placeholder="Starting Point / Your location"
-                                    defaultValue={editPooling.startTime}
-                                    name="startTime"
-                                    onChange={this.onChange}
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    name="check"
+                                    onChange={(e) => this.handleCheck(e)}
+                                    placeholder="return"
+                                    defaultValue={editPooling.withReturn}
                                   />
+                                  <label class="col-11 col-form-label">
+                                    Want to do return carpool also?
+                                  </label>
                                 </div>
+                                {this.state.check ? (
+                                  <div class=" form-group col-4">
+                                    <label class="col-form-label">
+                                      Return Date and time
+                                    </label>
+
+                                    <input
+                                      class="form-control"
+                                      name="returnDateTime"
+                                      type="datetime-local"
+                                      onChange={this.onChange}
+                                      defaultValue={editPooling.returnTime}
+                                    />
+                                  </div>
+                                ) : (
+                                  <div class=" form-group col-4">
+                                    <label class=" col-form-label">
+                                      Return Date and time
+                                    </label>
+                                    {(this.state.returnDateTime = null)}
+                                    <input
+                                      class="form-control"
+                                      name="returnDateTime"
+                                      type="datetime-local"
+                                      onChange={this.onChange}
+                                      disabled
+                                    />
+                                  </div>
+                                )}
+
                                 <div class="dropdown col-3 mt-4">
                                   Select Car
                                   <br />

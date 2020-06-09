@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { EmpInfoContext } from "../context/EmpInfoContext";
-import { PoolContext } from "../context/PoolContext";
+import { EmpInfoContext } from "../../context/EmpInfoContext";
+import { PoolContext } from "../../context/PoolContext";
 import { Link } from "react-router-dom";
 
 class CheckPoolings extends Component {
@@ -8,20 +8,42 @@ class CheckPoolings extends Component {
 
   static contextType = PoolContext;
 
-  // componentDidMount() {
-  //   const { handleOnLoad } = this.context;
-  //   handleOnLoad(this.state.empId);
-  // }
+  handleDate = (date) => {
+    var nowDate = new Date(date);
+    var date =
+      nowDate.getDate() +
+      "-" +
+      (nowDate.getMonth() + 1) +
+      "-" +
+      nowDate.getFullYear();
+    return date;
+  };
+
+  handleTime = (date) => {
+    var nowDate = new Date(date);
+    var time = nowDate.getHours() + ":" + nowDate.getMinutes();
+    return time;
+  };
 
   render() {
-    const { handleOnLoad, pooling, handleDelete, handleEdit } = this.context;
+    const {
+      handleOnLoad,
+      pooling,
+      handleDelete,
+      handleEdit,
+      handleCheckRiders,
+    } = this.context;
     return (
       <EmpInfoContext.Consumer>
         {(emp) => {
           const { empId } = emp;
 
           return (
-            <div className="container" onMouseOver={() => handleOnLoad(empId)}>
+            <div
+              className="container"
+              // onLoad={handleOnLoad(empId)}
+              onMouseOver={() => handleOnLoad(empId)}
+            >
               <h1>Your Poolings</h1>
               <div className="row">
                 <div className="col">
@@ -35,9 +57,9 @@ class CheckPoolings extends Component {
                               <b>Start Location:</b>{" "}
                               {i.startLocation.locationName}
                               <br />
-                              <b>Start Date:</b> {i.startDate}
+                              <b>Start Date:</b> {this.handleDate(i.startTime)}
                               <br />
-                              <b>Start Time:</b> {i.startTime}
+                              <b>Start Time:</b> {this.handleTime(i.startTime)}
                               <br />
                               <b>CostPerHead:</b> {i.costPerHead}
                               <br />
@@ -49,7 +71,27 @@ class CheckPoolings extends Component {
                               <b>Car:</b> {i.car.carBrand} , {i.car.carModel}
                               <br />
                               <b>Available Seats:</b> {i.availableSeats}
+                            </div>
+                            <div className="col-4">
+                              <b>Return Date:</b>{" "}
+                              {i.withReturn
+                                ? this.handleDate(i.returnTime)
+                                : "N/A"}
                               <br />
+                              <b>Return Time:</b>{" "}
+                              {i.withReturn
+                                ? this.handleTime(i.returnTime)
+                                : "N/A"}
+                              <br />
+                              <br />
+                              <Link to="/checkRiders">
+                                <button
+                                  className="btn btn-primary m-3 float-right"
+                                  onClick={() => handleCheckRiders(i.poolingId)}
+                                >
+                                  Check Riders for this Pooling
+                                </button>
+                              </Link>
                               <Link to="/editpooling">
                                 <button
                                   className="btn btn-info m-2 float-right"

@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
-import { EmpInfoContext } from "../context/EmpInfoContext";
-import { LocationContext } from "../context/LocationContext";
-import { CarContext } from "../context/CarContext";
-import { PoolContext } from "../context/PoolContext";
-class Carpool extends Component {
+import { EmpInfoContext } from "../../context/EmpInfoContext";
+import { LocationContext } from "../../context/LocationContext";
+import { CarContext } from "../../context/CarContext";
+import { PoolContext } from "../../context/PoolContext";
+class CreateCarpool extends Component {
   state = {
-    startDate: "",
-    startTime: "",
+    startDateTime: "",
+    check: false,
+    returnDateTime: "",
     costPerHead: 0.0,
     availableSeats: 0,
     startLocation: [],
@@ -20,8 +21,9 @@ class Carpool extends Component {
     const { handleAddCarPool } = this.context;
     e.preventDefault();
     const {
-      startDate,
-      startTime,
+      check,
+      returnDateTime,
+      startDateTime,
       costPerHead,
       availableSeats,
       startLocation,
@@ -33,8 +35,9 @@ class Carpool extends Component {
 
     handleAddCarPool(
       startLocation,
-      startDate,
-      startTime,
+      startDateTime,
+      check,
+      returnDateTime,
       costPerHead,
       destination,
       employee,
@@ -59,6 +62,12 @@ class Carpool extends Component {
     }
   };
 
+  handleCheck = (e) => {
+    this.setState({
+      [e.target.name]: e.target.checked ? true : false,
+    });
+  };
+
   render() {
     return (
       <EmpInfoContext.Consumer>
@@ -77,12 +86,13 @@ class Carpool extends Component {
                   <CarContext.Consumer>
                     {(carCon) => {
                       const { car } = carCon;
+                      const { msg } = this.context;
                       return (
                         <div className="container">
                           <h1>Create Carpool</h1>
                           <form onSubmit={this.submitForm}>
-                            <div className="row mt-4">
-                              <div class="dropdown col-3">
+                            <div className="row mt-4 mb-4">
+                              <div class="dropdown col">
                                 Start Location
                                 <select
                                   class="btn border dropdown-toggle m-2"
@@ -113,7 +123,7 @@ class Carpool extends Component {
                                 <Link to="/location">Add/Remove Location</Link>
                               </div>
 
-                              <div class="dropdown col-3">
+                              <div class="dropdown col">
                                 Select Destination
                                 <select
                                   class="btn border dropdown-toggle m-2"
@@ -143,6 +153,59 @@ class Carpool extends Component {
                                 </select>
                               </div>
 
+                              <div class=" form-group col">
+                                Start Date and time
+                                <input
+                                  class="form-control"
+                                  name="startDateTime"
+                                  type="datetime-local"
+                                  onChange={this.onChange}
+                                />
+                              </div>
+                            </div>
+                            <div className="row mt-4">
+                              <div className="col-4 ml-4 form-check">
+                                <input
+                                  type="checkbox"
+                                  className="form-check-input"
+                                  name="check"
+                                  onChange={(e) => this.handleCheck(e)}
+                                  placeholder="return"
+                                />
+                                <label class="col-11 col-form-label">
+                                  Want to do return carpool also?
+                                </label>
+                              </div>
+                              {this.state.check ? (
+                                <div class=" form-group col-4">
+                                  <label class="col-form-label">
+                                    Return Date and time
+                                  </label>
+
+                                  <input
+                                    class="form-control"
+                                    name="returnDateTime"
+                                    type="datetime-local"
+                                    onChange={this.onChange}
+                                  />
+                                </div>
+                              ) : (
+                                <div class=" form-group col-4">
+                                  <label class=" col-form-label">
+                                    Return Date and time
+                                  </label>
+                                  {(this.state.returnDateTime = null)}
+                                  <input
+                                    class="form-control"
+                                    name="returnDateTime"
+                                    type="datetime-local"
+                                    onChange={this.onChange}
+                                    disabled
+                                  />
+                                </div>
+                              )}
+                            </div>
+                            {/* 
                               <div class="form-group col-3">
                                 <label for="exampleInputEmail1">
                                   Carpool Start Date
@@ -168,10 +231,10 @@ class Carpool extends Component {
                                   name="startTime"
                                   onChange={this.onChange}
                                 />
-                              </div>
-                            </div>
-                            <div className="row">
-                              <div class="dropdown col-3 mt-4">
+                              </div> */}
+
+                            <div className="row mt-4">
+                              <div class="dropdown col-3 ">
                                 Select Car
                                 <br />
                                 <select
@@ -235,6 +298,7 @@ class Carpool extends Component {
                               className="btn btn-info float-right"
                               value="Create CarPool"
                             />
+                            {msg}
                           </form>
                         </div>
                       );
@@ -250,4 +314,4 @@ class Carpool extends Component {
   }
 }
 
-export default Carpool;
+export default CreateCarpool;

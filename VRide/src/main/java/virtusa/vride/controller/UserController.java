@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import virtusa.vride.model.Car;
+import virtusa.vride.model.Employee;
 import virtusa.vride.model.Location;
 import virtusa.vride.model.User;
 import virtusa.vride.repository.CarRepository;
@@ -50,16 +51,17 @@ public class UserController {
 	
 	@PostMapping("/user/signup/getOtp/{empid}")
 	ResponseEntity<?> getOtp(@PathVariable String empid) throws URISyntaxException{
-		HashMap<String,Object> response= new HashMap<>(); 
-		if(employeeRepository.findById(empid).isPresent()){
+		Optional<Employee> employee = employeeRepository.findById(empid);
+		HashMap<String,Object> response= new HashMap<>(); //added this
+		if(employee.isPresent()){
 	  		if(!userRepository.findByEmployee(employeeRepository.findByEmpId(empid)).isPresent()) {
-	  			Integer otp = otpService.generateOtp(empid);
+	  			Integer otp = otpService.generateOtp(employee.get());
 	  			if(otp==-1) {
 	  				return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
 	  			}
-	  			response.put("email", employeeRepository.findByEmpId(empid).getEmpEmail());
-		        response.put(empid, otp);
-		        return ResponseEntity.ok().body(response);
+	  			 response.put(empid, otp);//added this
+	  			return ResponseEntity.ok().body(response);//added this
+//	  			return new ResponseEntity<>(HttpStatus.OK,otp);
 			} else {
 			    return new ResponseEntity<>(HttpStatus.FOUND);	
 			} 
@@ -145,7 +147,7 @@ public class UserController {
 	    return 	locationRepository.findByEmployee(employeeRepository.findByEmpId(empid));
 	}
 	
-	@DeleteMapping("{empid}/locations/{id}")
+	@DeleteMapping("locations/{empid}/{id}")
 	Collection<Location> deleteLocations(@PathVariable String empid,@PathVariable Long id){
 		locationRepository.deleteById(id);
 	    return 	locationRepository.findByEmployee(employeeRepository.findByEmpId(empid));

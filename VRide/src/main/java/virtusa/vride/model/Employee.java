@@ -23,19 +23,16 @@ public class Employee {
 	private String empEmail;
 	
 	@NotNull
-	@Range(min=0 , max=3)
-	private Integer empGender;
+	private String empGender;
 	
 	@Temporal(TemporalType.DATE)
 	private Date empDOB;
+	
 	
 	public void setEmpId(String empId) {
 		this.empId = empId;
 	}
 	
-	public void setEmpGender(Integer empGender) {
-		this.empGender = empGender;
-	}
 	
 	public void setEmpName(String empName) {
 		this.empName = empName;
@@ -53,9 +50,6 @@ public class Employee {
 		return empId;
 	}
 	
-	public Integer getEmpGender() {
-		return empGender;
-	}
 	
 	public String getEmpName() {
 		return empName;
@@ -69,5 +63,13 @@ public class Employee {
 		return empDOB;
 	}
 	
+	
+	public String getEmpGender() {
+		return empGender;
+	}
+
+	public void setEmpGender(String empGender) {
+		this.empGender = empGender;
+	}
 	
 }

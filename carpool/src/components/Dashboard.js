@@ -21,11 +21,11 @@ class Dashboard extends Component {
             Logout
           </Link>
 
-          <Link to="/search" className="col">
-            Take Ride
+          <Link to="/rider" className="col">
+            See Rider Options
           </Link>
           <Link to="/carpool" className="col">
-            Carpool
+            See Carpool Options
           </Link>
           <Link to="/profile" className="col">
             Change profile

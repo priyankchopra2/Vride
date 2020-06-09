@@ -21,6 +21,16 @@ public class Rider {
 	@ManyToOne
 	private Pooling pooling;
 	
+	boolean isRideComplete;
+	
+	public boolean isRideComplete() {
+		return isRideComplete;
+	}
+
+	public void setRideComplete(boolean isRideComplete) {
+		this.isRideComplete = isRideComplete;
+	}
+
 	public void setRiderId(Long riderId) {
 		this.riderId = riderId;
 	}

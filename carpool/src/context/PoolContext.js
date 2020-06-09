@@ -3,12 +3,20 @@ import React, { Component, createContext } from "react";
 export const PoolContext = createContext();
 
 class PoolContextProvider extends Component {
-  state = { pooling: [], editPooling: [], isEdit: false, isUpdated: false };
+  state = {
+    pooling: [],
+    editPooling: [],
+    isEdit: false,
+    isUpdated: false,
+    msg: "",
+    rider: [],
+  };
 
   handleAddCarPool = async (
     startLocation,
-    startDate,
-    startTime,
+    startDateTime,
+    check,
+    returnDateTime,
     costPerHead,
     destination,
     employee,
@@ -16,10 +24,14 @@ class PoolContextProvider extends Component {
     availableSeats
   ) => {
     let url = "api/add/pooling";
+    let sDate = new Date(startDateTime.toString());
+    let rDate =
+      returnDateTime == null ? null : new Date(returnDateTime.toString());
     let pooling = {
       startLocation,
-      startDate: startDate.toString(),
-      startTime: startTime.toString() + ":00",
+      startTime: sDate,
+      withReturn: check,
+      returnTime: rDate,
       costPerHead: parseFloat(costPerHead),
       destinationLocation: destination,
       employee,
@@ -38,8 +50,15 @@ class PoolContextProvider extends Component {
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
-        if (data.status != 404) {
-          this.setState({ pooling: data });
+        if (data.status != 404 && data.status != 400) {
+          this.setState({
+            pooling: data,
+            msg: (
+              <div className="alert alert-success mb-5">
+                Pooling added Successfully
+              </div>
+            ),
+          });
         }
       })
       .catch((error) => {
@@ -53,7 +72,7 @@ class PoolContextProvider extends Component {
   };
 
   handleOnLoad = async (empid) => {
-    const response = await fetch("api/poolings/" + empid);
+    const response = await fetch("api/poolings/provider/" + empid);
     const body = await response.json().catch((err) => console.log(err));
     this.setState({ pooling: body });
   };
@@ -89,8 +108,9 @@ class PoolContextProvider extends Component {
   handleEditCarPool = async (
     poolingId,
     startLocation,
-    startDate,
-    startTime,
+    startDateTime,
+    check,
+    returnDateTime,
     costPerHead,
     destination,
     employee,
@@ -98,11 +118,15 @@ class PoolContextProvider extends Component {
     availableSeats
   ) => {
     let url = "api/update/pooling/";
+    let sDate = new Date(startDateTime.toString());
+    let rDate =
+      returnDateTime == null ? null : new Date(returnDateTime.toString());
     let pooling = {
       poolingId: parseInt(poolingId, 10),
       startLocation,
-      startDate: startDate.toString(),
-      startTime: startTime.toString(),
+      startTime: sDate,
+      withReturn: check,
+      returnTime: rDate,
       costPerHead: parseFloat(costPerHead),
       destinationLocation: destination,
       employee,
@@ -128,11 +152,15 @@ class PoolContextProvider extends Component {
       .catch((error) => {
         console.error("Error:", error);
         this.setState({
-          otpErrorMsg: (
-            <div className="alert alert-danger m-2">Invalid Otp</div>
-          ),
+          otpErrorMsg: <div className="alert alert-danger m-2">Error came</div>,
         });
       });
+  };
+
+  handleCheckRiders = async (poolingId) => {
+    const response = await fetch("api/rider/pooling/" + poolingId);
+    const body = await response.json().catch((err) => console.log(err));
+    this.setState({ rider: body });
   };
 
   render() {
@@ -146,6 +174,7 @@ class PoolContextProvider extends Component {
           handleSearchByDestination: this.handleSearchByDestination,
           handleEdit: this.handleEdit,
           handleEditCarPool: this.handleEditCarPool,
+          handleCheckRiders: this.handleCheckRiders,
         }}
       >
         {this.props.children}
