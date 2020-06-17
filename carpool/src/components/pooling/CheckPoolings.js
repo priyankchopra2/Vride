@@ -54,8 +54,21 @@ class CheckPoolings extends Component {
                         <li className="list-group-item p-4" key={i.poolingId}>
                           <div className="row">
                             <div className="col-4">
+                              <div className="row ">
+                                {i.isCompleted ? (
+                                  <div className="badge-success">
+                                    Ride Completed
+                                  </div>
+                                ) : (
+                                  <div>
+                                    <span className="badge-danger">
+                                      Not completed
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
                               <b>Start Location:</b>{" "}
-                              {i.startLocation.locationName}
+                              {i.startLocation.locationAddress}
                               <br />
                               <b>Start Date:</b> {this.handleDate(i.startTime)}
                               <br />
@@ -86,7 +99,7 @@ class CheckPoolings extends Component {
                               <br />
                               <Link to="/checkRiders">
                                 <button
-                                  className="btn btn-primary m-3 float-right"
+                                  className="btn btn-primary m-2 float-right"
                                   onClick={() => handleCheckRiders(i.poolingId)}
                                 >
                                   Check Riders for this Pooling

@@ -12,7 +12,8 @@ class LocationContextProvider extends Component {
   };
 
   handleAddLocation = async (
-    locationName,
+    locationAddress,
+    locationNickName,
     locationLatitude,
     locationLongitude,
     emp
@@ -20,7 +21,8 @@ class LocationContextProvider extends Component {
     // have to make post req sending the details
     let url = "api/add/location";
     let newLocation = {
-      locationName: locationName.toString(),
+      locationAddress: locationAddress.toString(),
+      locationNickName: locationNickName.toString(),
       locationLatitude: parseFloat(locationLatitude),
       locationLongitude: parseFloat(locationLongitude),
       employee: emp,

@@ -16,8 +16,17 @@ class CheckRiders extends Component {
           rider.map((i, index) => (
             <li className="list-group-item p-4" key={i.riderId}>
               <div className="row">
+                <span className="badge-info mr-3">#{index + 1}</span>
+                {i.isPaid ? (
+                  <div className="badge-success">Amount Paid</div>
+                ) : (
+                  <div>
+                    <span className="badge-danger">Amount Due</span>
+                  </div>
+                )}
+              </div>
+              <div className="row">
                 <div className="col">
-                  <span className="badge-info ">#{index + 1}</span>
                   <br />
                   <b>Rider Name :</b> {i.employee.empName}
                   <br />

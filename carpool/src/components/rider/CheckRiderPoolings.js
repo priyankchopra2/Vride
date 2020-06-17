@@ -46,7 +46,7 @@ class CheckRiderPoolings extends Component {
                           key={i.pooling.poolingId}
                         >
                           <div className="row ">
-                            {i.rideComplete ? (
+                            {i.isPaid ? (
                               <div className="badge-success">Amount Paid</div>
                             ) : (
                               <div>
@@ -63,7 +63,7 @@ class CheckRiderPoolings extends Component {
 
                             <div className="col">
                               <b>Start Location:</b>{" "}
-                              {i.pooling.startLocation.locationName}
+                              {i.pooling.startLocation.locationAddress}
                               <br />
                               <b>Start Date:</b>{" "}
                               {this.handleDate(i.pooling.startTime)}
@@ -85,12 +85,12 @@ class CheckRiderPoolings extends Component {
                             </div>
                             <div className="col-4">
                               <b>Return Date:</b>{" "}
-                              {i.withReturn
+                              {i.pooling.withReturn
                                 ? this.handleDate(i.pooling.returnTime)
                                 : "N/A"}
                               <br />
                               <b>Return Time:</b>{" "}
-                              {i.withReturn
+                              {i.pooling.withReturn
                                 ? this.handleTime(i.pooling.returnTime)
                                 : "N/A"}
                               <br />

@@ -143,7 +143,7 @@ class EditPooling extends Component {
                                           key={i.locationId}
                                           value={JSON.stringify(i)}
                                         >
-                                          {i.locationName}
+                                          {i.locationNickName}
                                         </option>
                                       ))
                                     ) : (
@@ -151,7 +151,10 @@ class EditPooling extends Component {
                                         className="list-group-item"
                                         selected
                                       >
-                                        {editPooling.startLocation.locationName}
+                                        {
+                                          editPooling.startLocation
+                                            .locationNickName
+                                        }
                                       </option>
                                     )}
                                   </select>

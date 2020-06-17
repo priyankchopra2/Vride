@@ -14,6 +14,7 @@ class CreateCarpool extends Component {
     startLocation: [],
     destination: [],
     car: [],
+    isCompleted: false,
   };
   static contextType = PoolContext;
 
@@ -25,6 +26,7 @@ class CreateCarpool extends Component {
       returnDateTime,
       startDateTime,
       costPerHead,
+      isCompleted,
       availableSeats,
       startLocation,
       destination,
@@ -39,6 +41,7 @@ class CreateCarpool extends Component {
       check,
       returnDateTime,
       costPerHead,
+      isCompleted,
       destination,
       employee,
       car,
@@ -111,7 +114,7 @@ class CreateCarpool extends Component {
                                         key={i.locationId}
                                         value={JSON.stringify(i)}
                                       >
-                                        {i.locationName}
+                                        {i.locationNickName}
                                       </option>
                                     ))
                                   ) : (

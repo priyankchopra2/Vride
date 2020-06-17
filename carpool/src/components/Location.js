@@ -9,10 +9,11 @@ import PlacesAutocomplete, {
 class Location extends Component {
   state = {
     employee: [],
-    locationName: "",
+    address: "",
+    locationAddress: "",
+    locationNickName: "",
     locationLatitude: "",
     locationLongitude: "",
-    address: "",
   };
 
   static contextType = LocationContext;
@@ -25,16 +26,32 @@ class Location extends Component {
 
   submitForm = (e, emp) => {
     e.preventDefault();
-    const { locationName, locationLatitude, locationLongitude } = this.state;
+    const {
+      // locationAddress,
+      address,
+      locationNickName,
+      locationLatitude,
+      locationLongitude,
+    } = this.state;
     const { handleAddLocation } = this.context;
     console.log(
       "in submit function",
-      locationName,
+      // locationAddress,
+      address,
+      locationNickName,
       locationLatitude,
       locationLongitude,
       emp
     );
-    handleAddLocation(locationName, locationLatitude, locationLongitude, emp);
+    //calling the function in location context
+    handleAddLocation(
+      // locationAddress, use normal address here
+      address,
+      locationNickName,
+      locationLatitude,
+      locationLongitude,
+      emp
+    );
 
     // const { username, password } = this.state;
     // let res = handleLogin(username, password);
@@ -78,7 +95,10 @@ class Location extends Component {
                     {location.length ? (
                       location.map((i) => (
                         <li className="list-group-item" key={i.locationId}>
-                          {i.locationName}
+                          <b>Location Name: </b> {i.locationNickName}
+                          <br />
+                          <b>Address: </b>
+                          {i.locationAddress}
                           <button
                             className="btn btn-danger float-right"
                             onClick={() => handleDelete(empId, i.locationId)}
@@ -159,13 +179,24 @@ class Location extends Component {
                   </div>
                   <form onSubmit={(e) => this.submitForm(e, emp.employee)}>
                     <div class="form-group ">
+                      <label for="exampleInputEmail1">Location Address</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Location Address"
+                        value={this.state.address}
+                        name="locationAddress"
+                        onChange={this.onChange}
+                      />
+                    </div>
+                    <div class="form-group ">
                       <label for="exampleInputEmail1">Location Name</label>
                       <input
                         type="text"
                         class="form-control"
                         placeholder="Location Name"
-                        value={this.state.locationName}
-                        name="locationName"
+                        value={this.state.locationNickName}
+                        name="locationNickName"
                         onChange={this.onChange}
                       />
                     </div>

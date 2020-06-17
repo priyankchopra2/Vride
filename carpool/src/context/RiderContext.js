@@ -8,7 +8,7 @@ class RiderContextProvider extends Component {
   handleAddRider = async (startLocation, employee, pooling, isPaid) => {
     let url = "api/add/rider";
 
-    let rider = { startLocation, employee, pooling, rideComplete: isPaid };
+    let rider = { startLocation, employee, pooling, isPaid };
 
     console.log("In RIDER Context", JSON.stringify(rider));
 

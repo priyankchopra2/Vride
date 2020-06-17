@@ -109,7 +109,7 @@ class Search extends React.Component {
                                       <div className="row">
                                         <div className="col-4">
                                           <b>Start Location:</b>{" "}
-                                          {i.startLocation.locationName}
+                                          {i.startLocation.locationAddress}
                                           <br />
                                           <b>Start Date:</b>
                                           {this.handleDate(i.startTime)}
