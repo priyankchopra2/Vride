@@ -5,16 +5,30 @@ import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from "react-places-autocomplete";
+import MapContainer from "./MapContainer";
 
 class Location extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   state = {
+    locations: [],
     employee: [],
     address: "",
     locationAddress: "",
     locationNickName: "",
-    locationLatitude: "",
-    locationLongitude: "",
+    locationLatitude: 12.99628,
+    locationLongitude: 80.249191,
   };
+
+  // componentDidMount() {
+  //   console.log("in component will mount");
+  //   const API_KEY = process.env.REACT_APP_MAPS_API_KEY;
+  //   const script = document.createElement("script");
+  //   script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places&callback=abc`;
+  //   document.body.insertBefore(script, document.body.childNodes[8]);
+  // }
 
   static contextType = LocationContext;
 
@@ -77,6 +91,19 @@ class Location extends Component {
       .catch((error) => console.error("Error in map", error));
   };
 
+  handleClickMap = () => {
+    console.log("func called in location component");
+
+    setTimeout(() => {
+      const { address, locations } = this.context;
+      this.setState({
+        address,
+        locationLatitude: locations[0],
+        locationLongitude: locations[1],
+      });
+    }, 3000);
+  };
+
   render() {
     const { location, handleOnLoad, handleDelete } = this.context;
     return (
@@ -88,7 +115,8 @@ class Location extends Component {
               <h1>Locations</h1>
 
               <div className="row">
-                <div className="col" onclick={handleOnLoad(empId)}>
+                {/* Will display all the locations from database */}
+                <div className="col" onMouseOver={() => handleOnLoad(empId)}>
                   <h2>Saved Locations</h2>
                   <ul className="list-group">
                     {/* {empId} */}
@@ -114,6 +142,23 @@ class Location extends Component {
                 </div>
                 <div className="col">
                   <h2>Add New Locations</h2>
+                  {/* Here add new locations from map or from search bar */}
+                  <h5>Search Location On Maps</h5>
+                  <div
+                    className="map row"
+                    style={{ width: "200px", height: "200px" }}
+                    onClick={this.handleClickMap}
+                  >
+                    <MapContainer
+                      lat={this.state.locationLatitude}
+                      lng={this.state.locationLongitude}
+                    />
+                  </div>
+                  <br />
+                  <br />
+                  <br />
+                  <h5>Or</h5>
+                  <h5>Search Location On Search Bar</h5>
                   <div className="search row">
                     <form action="" method="get">
                       <PlacesAutocomplete

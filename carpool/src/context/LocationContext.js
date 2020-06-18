@@ -3,7 +3,14 @@ import React, { Component, createContext } from "react";
 export const LocationContext = createContext();
 
 class LocationContextProvider extends Component {
-  state = { location: [], newLocation: [], destination: [] };
+  //from database                                 locations[]->for maps
+  state = {
+    location: [],
+    newLocation: [],
+    destination: [],
+    locations: [],
+    address: "",
+  };
 
   handleOnLoad = async (empid) => {
     const response = await fetch("api/" + empid + "/locations");
@@ -67,6 +74,17 @@ class LocationContextProvider extends Component {
     this.setState({ destination: body });
   };
 
+  handleMapData = (lat, lng, address) => {
+    console.log(
+      "in location context checkingg location",
+      lat,
+      lng,
+      "address",
+      address
+    );
+    this.setState({ locations: [lat, lng], address });
+  };
+
   render() {
     return (
       <LocationContext.Provider
@@ -76,6 +94,7 @@ class LocationContextProvider extends Component {
           handleAddLocation: this.handleAddLocation,
           handleDelete: this.handleDelete,
           handleLoadDestination: this.handleLoadDestination,
+          handleMapData: this.handleMapData,
         }}
       >
         {this.props.children}

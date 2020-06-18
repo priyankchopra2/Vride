@@ -32,6 +32,7 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>React App</title>
+
     <script src="bootstrap/dist/css/bootstrap.min.js"></script>
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
@@ -63,16 +64,13 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-
     <script>
       function abc() {
         var des = document.getElementById("des");
         var Autocomplete = new google.maps.places.Autocomplete(des);
       }
     </script>
-    <script
-      type="text/javascript"
-      src=""
-    ></script>
+    <!-- ADD MAPS API KEY IN BELOW SCRIPT -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=&libraries=places&callback=abc"></script>
   </body>
 </html>

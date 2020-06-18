@@ -20,8 +20,16 @@ import Carpool from "./pooling/Carpool";
 import Rider from "./rider/Rider";
 import CheckRiderPoolings from "./rider/CheckRiderPoolings";
 import CheckRiders from "./pooling/CheckRiders";
+import MapContainer from "./MapContainer";
 
 class App extends Component {
+  componentWillMount() {
+    console.log("in component will mount");
+    const API_KEY = process.env.REACT_APP_MAPS_API_KEY;
+    const script = document.createElement("script");
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places&callback=abc`;
+    document.body.insertBefore(script, document.body.childNodes[8]);
+  }
   state = {};
   render() {
     return (
